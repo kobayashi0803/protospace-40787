@@ -1,11 +1,13 @@
 class PrototypesController < ApplicationController
-  before_action :authenticate_user!, only: :destroy
+  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :set_prototype, only: [:show, :edit, :update, :destroy]
+  before_action :authorize_user!, only: [:edit, :update, :destroy]
+
   def index
     @prototypes = Prototype.all
   end
 
   def new
-    authenticate_user!
     @prototype = Prototype.new
   end
 
@@ -21,34 +23,42 @@ class PrototypesController < ApplicationController
 
   def edit
     unless user_signed_in?
-      redirect_to root_path
+      redirect_to action: index
     end
-    @prototype = Prototype.find(params[:id])
   end
 
   def update
-  if current_user.update(user_params)
-      redirect_to root_path
+    if @prototype.update(prototype_params)
+      redirect_to @prototype, notice: 'Prototype was successfully updated.'
     else
       render :edit, status: :unprocessable_entity
     end
   end
 
   def show
-    @prototype = Prototype.find(params[:id])
     @comments = @prototype.comments.includes(:user)
     @comment = Comment.new
   end
   
   def destroy
-    prototype = Prototype.find(params[:id])
-    prototype.destroy
-    redirect_to root_path
+    @prototype.destroy
+    redirect_to root_path, notice: 'Prototype was successfully deleted.'
   end
 
   private
+
+  def set_prototype
+    @prototype = Prototype.find_by(id: params[:id])
+  end
+
+  def authorize_user!
+    unless @prototype.user == current_user
+      flash[:alert] = 'You are not authorized to perform this action.'
+      redirect_to root_path
+    end
+  end
+  
   def prototype_params
     params.require(:prototype).permit(:title, :catch_copy, :concept, :image)
   end
 end
-
