@@ -75,7 +75,7 @@ gem 'pry-rails'
 gem 'devise'
 gem 'mini_magick'
 gem 'image_processing', '~> 1.2'
-gem 'jquery-rails'
+# gem 'jquery-rails'
 group :production do
   gem 'pg'
 end
