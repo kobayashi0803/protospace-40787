@@ -4,11 +4,10 @@ class CommentsController < ApplicationController
     @comment.user = current_user
     @comment.prototype_id = params[:prototype_id]
     if @comment.save
-      redirect_to prototype_path(@comment.prototype)
+      redirect_to prototype_path(@comment.prototype), notice: 'Comment was successfully created.'
     else
-      # エラーハンドリング: コメントが保存できない場合
-      flash[:alert] = "コメントの保存に失敗しました。"
-      redirect_to prototype_path(@comment.prototype)
+      flash.now[:alert] = 'There was an error creating the comment.'
+      render "prototypes/show"
     end
   end
 
