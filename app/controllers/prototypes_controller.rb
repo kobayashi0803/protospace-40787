@@ -48,7 +48,7 @@ class PrototypesController < ApplicationController
   private
 
   def set_prototype
-    @prototype = Prototype.find_by(params[:id])
+    @prototype = Prototype.find_by(id: params[:id])
   end
 
   def authorize_user!
