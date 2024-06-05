@@ -14,7 +14,8 @@
       <% end %>
       <%# // プロトタイプの投稿者とログインしているユーザーが同じであれば上記を表示する %>
       <div class="prototype__image">
-        <%= link_to image_tag(@prototype.image, class: :card__img ), prototype_path%>
+        <strong>画像:</strong><br>
+        <%= image_tag @prototype.image if @prototype.image.attached? %>
       </div>
       <div class="prototype__body">
         <div class="prototype__detail">
